@@ -560,7 +560,7 @@ export function oneStep(inputData: number[]): number[] {
     let outputs = network[network.length - 1];
     for (let j = 0; j < outputs.length; j++) {
         let node = outputs[j];
-        outputData.push(node.bias + node.output);
+        outputData.push(node.output);
     }
     return outputData;
 }

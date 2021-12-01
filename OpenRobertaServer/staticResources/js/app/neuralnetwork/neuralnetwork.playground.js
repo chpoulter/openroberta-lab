@@ -514,7 +514,7 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
         var outputs = network[network.length - 1];
         for (var j = 0; j < outputs.length; j++) {
             var node = outputs[j];
-            outputData.push(node.bias + node.output);
+            outputData.push(node.output);
         }
         return outputData;
     }

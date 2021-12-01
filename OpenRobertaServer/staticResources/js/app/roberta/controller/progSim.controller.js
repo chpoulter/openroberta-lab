@@ -68,7 +68,7 @@ define(["require", "exports", "message", "util", "webots.simulation", "simulatio
                                     setTimeout(function () {
                                         SIM.setPause(false);
                                     }, 500);
-                                    NN_CTRL.SIM.init([result], false, GUISTATE_C.getRobotGroup());
+                                    SIM.init([result], false, GUISTATE_C.getRobotGroup());
                                 }
                             }
                             else {

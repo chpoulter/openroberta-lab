@@ -1,6 +1,4 @@
-import * as exports from 'exports';
 import * as MSG from 'message';
-import * as LOG from 'log';
 import * as UTIL from 'util';
 import * as NAOSIM from 'webots.simulation';
 import * as SIM from 'simulation.simulation';
