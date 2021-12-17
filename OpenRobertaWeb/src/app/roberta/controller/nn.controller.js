@@ -4,6 +4,7 @@ import * as PG from 'neuralnetwork.playground';
 import * as $ from 'jquery';
 import * as Blockly from 'blockly';
 import 'jquery-validate';
+import { State } from 'neuralnetwork.state';
 
 export function init() {
     $('#tabNN').onWrap(
@@ -44,7 +45,7 @@ export function prepareNNfromNNstep() {
     var inputNeurons = [];
     var outputNeurons = [];
     var nnStepBlock = getTheNNstepBlock();
-    var state = nnStepBlock.data === undefined ? undefined : JSON.parse(nnStepBlock.data);
+    var state = nnStepBlock.data === undefined || nnStepBlock.data === null ? new State() : JSON.parse(nnStepBlock.data);
     extractInputOutputNeurons(inputNeurons, outputNeurons, nnStepBlock.getChildren());
     PG.setPlayground(state, inputNeurons, outputNeurons);
 }

@@ -1,4 +1,4 @@
-define(["require", "exports", "log", "guiState.controller", "neuralnetwork.playground", "jquery", "blockly", "jquery-validate"], function (require, exports, LOG, GUISTATE_C, PG, $, Blockly) {
+define(["require", "exports", "log", "guiState.controller", "neuralnetwork.playground", "jquery", "blockly", "neuralnetwork.state", "jquery-validate"], function (require, exports, LOG, GUISTATE_C, PG, $, Blockly, neuralnetwork_state_1) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.prepareNNfromNNstep = exports.init = void 0;
     function init() {
@@ -25,7 +25,7 @@ define(["require", "exports", "log", "guiState.controller", "neuralnetwork.playg
         var inputNeurons = [];
         var outputNeurons = [];
         var nnStepBlock = getTheNNstepBlock();
-        var state = nnStepBlock.data === undefined ? undefined : JSON.parse(nnStepBlock.data);
+        var state = nnStepBlock.data === undefined || nnStepBlock.data === null ? new neuralnetwork_state_1.State() : JSON.parse(nnStepBlock.data);
         extractInputOutputNeurons(inputNeurons, outputNeurons, nnStepBlock.getChildren());
         PG.setPlayground(state, inputNeurons, outputNeurons);
     }
