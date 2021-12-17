@@ -7,9 +7,9 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getStateAsJSONString = exports.oneStep = exports.runPlayground = exports.setPlayground = exports.makeSimpleNetwork = exports.reset = void 0;
     var mainWidth;
-    var RECT_SIZE = 30;
-    var SPACE_BETWEEN_NODES = 90;
-    var BIAS_SIZE = 5;
+    var RECT_SIZE = 50;
+    var SPACE_BETWEEN_NODES = 60;
+    var BIAS_SIZE = 10;
     var HoverType;
     (function (HoverType) {
         HoverType[HoverType["BIAS"] = 0] = "BIAS";
@@ -83,7 +83,7 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
             }
         }
     }
-    function drawNode(cx, cy, nodeId, nodeType, container, node) {
+    function drawNode(numberLabel, cx, cy, nodeId, nodeType, container, node) {
         var x = cx - RECT_SIZE / 2;
         var y = cy - RECT_SIZE / 2;
         var nodeClass = nodeType === NodeType.INPUT ? 'node_input' : nodeType === NodeType.HIDDEN ? 'node_hidden' : 'node_output';
@@ -99,6 +99,13 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
             width: RECT_SIZE,
             height: RECT_SIZE,
         });
+        var numberLabelNode = nodeGroup.append('text').attr({
+            class: 'main-label',
+            x: 10,
+            y: 20,
+            'text-anchor': 'start',
+        });
+        numberLabelNode.append('tspan').text(numberLabel);
         var activeOrNotClass = state[nodeId] ? 'active' : 'inactive';
         if (nodeType === NodeType.INPUT) {
             // Draw the input label.
@@ -193,7 +200,7 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
         nodeIds.forEach(function (nodeId, i) {
             var cy = nodeIndexScale(i) + RECT_SIZE / 2;
             node2coord[nodeId] = { cx: cxI, cy: cy };
-            drawNode(cxI, cy, nodeId, NodeType.INPUT, container);
+            drawNode('0.' + i, cxI, cy, nodeId, NodeType.INPUT, container);
         });
         // Draw the intermediate layers, exclude input (id:0) and output (id:numLayers-1)
         for (var layerIdx = 1; layerIdx < numLayers - 1; layerIdx++) {
@@ -205,7 +212,7 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
                 var node = network[layerIdx][i];
                 var cy = nodeIndexScale(i) + RECT_SIZE / 2;
                 node2coord[node.id] = { cx: cxH, cy: cy };
-                drawNode(cxH, cy, node.id, NodeType.HIDDEN, container, node);
+                drawNode('' + layerIdx + '.' + i, cxH, cy, node.id, NodeType.HIDDEN, container, node);
                 // Show callout to thumbnails.
                 var numNodes_1 = network[layerIdx].length;
                 var nextNumNodes = network[layerIdx + 1].length;
@@ -251,7 +258,7 @@ define(["require", "exports", "./neuralnetwork.nn", "./neuralnetwork.state", "d3
                 var node = outputLayer[j];
                 var cy = nodeIndexScale(j) + RECT_SIZE / 2;
                 node2coord[node.id] = { cx: cxO, cy: cy };
-                drawNode(cxO, cy, node.id, NodeType.OUTPUT, container, node);
+                drawNode('' + (numLayers - 1) + '.' + j, cxO, cy, node.id, NodeType.OUTPUT, container, node);
                 // Draw links.
                 for (var i = 0; i < node.inputLinks.length; i++) {
                     var link = node.inputLinks[i];

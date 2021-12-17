@@ -10,9 +10,9 @@ import * as d3 from 'd3';
 
 let mainWidth;
 
-const RECT_SIZE = 30;
-const SPACE_BETWEEN_NODES = 90;
-const BIAS_SIZE = 5;
+const RECT_SIZE = 50;
+const SPACE_BETWEEN_NODES = 60;
+const BIAS_SIZE = 10;
 
 enum HoverType {
     BIAS,
@@ -96,7 +96,7 @@ function updateWeightsUI(network: nn.Node[][], container) {
     }
 }
 
-function drawNode(cx: number, cy: number, nodeId: string, nodeType: NodeType, container, node?: nn.Node) {
+function drawNode(numberLabel: string, cx: number, cy: number, nodeId: string, nodeType: NodeType, container, node?: nn.Node) {
     let x = cx - RECT_SIZE / 2;
     let y = cy - RECT_SIZE / 2;
     let nodeClass = nodeType === NodeType.INPUT ? 'node_input' : nodeType === NodeType.HIDDEN ? 'node_hidden' : 'node_output';
@@ -113,6 +113,13 @@ function drawNode(cx: number, cy: number, nodeId: string, nodeType: NodeType, co
         width: RECT_SIZE,
         height: RECT_SIZE,
     });
+    let numberLabelNode = nodeGroup.append('text').attr({
+        class: 'main-label',
+        x: 10,
+        y: 20,
+        'text-anchor': 'start',
+    });
+    numberLabelNode.append('tspan').text(numberLabel);
     let activeOrNotClass = state[nodeId] ? 'active' : 'inactive';
     if (nodeType === NodeType.INPUT) {
         // Draw the input label.
@@ -213,7 +220,7 @@ function drawNetwork(network: nn.Node[][]): void {
     nodeIds.forEach((nodeId, i) => {
         let cy = nodeIndexScale(i) + RECT_SIZE / 2;
         node2coord[nodeId] = { cx: cxI, cy: cy };
-        drawNode(cxI, cy, nodeId, NodeType.INPUT, container);
+        drawNode('0.' + i, cxI, cy, nodeId, NodeType.INPUT, container);
     });
 
     // Draw the intermediate layers, exclude input (id:0) and output (id:numLayers-1)
@@ -226,7 +233,7 @@ function drawNetwork(network: nn.Node[][]): void {
             let node = network[layerIdx][i];
             let cy = nodeIndexScale(i) + RECT_SIZE / 2;
             node2coord[node.id] = { cx: cxH, cy: cy };
-            drawNode(cxH, cy, node.id, NodeType.HIDDEN, container, node);
+            drawNode('' + layerIdx + '.' + i, cxH, cy, node.id, NodeType.HIDDEN, container, node);
 
             // Show callout to thumbnails.
             let numNodes = network[layerIdx].length;
@@ -277,7 +284,7 @@ function drawNetwork(network: nn.Node[][]): void {
             let node = outputLayer[j];
             let cy = nodeIndexScale(j) + RECT_SIZE / 2;
             node2coord[node.id] = { cx: cxO, cy: cy };
-            drawNode(cxO, cy, node.id, NodeType.OUTPUT, container, node);
+            drawNode('' + (numLayers - 1) + '.' + j, cxO, cy, node.id, NodeType.OUTPUT, container, node);
             // Draw links.
             for (let i = 0; i < node.inputLinks.length; i++) {
                 let link = node.inputLinks[i];
